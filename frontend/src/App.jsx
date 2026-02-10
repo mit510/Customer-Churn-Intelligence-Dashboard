@@ -18,7 +18,7 @@ function App() {
   const [prediction, setPrediction] = useState(null);
   const [explanation, setExplanation] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [darkMode, setDarkMode] = useState(true);
+  const [darkMode, setDarkMode] = useState(false);
   const [filterRisk, setFilterRisk] = useState("all");
 
   const [formData, setFormData] = useState({
@@ -207,116 +207,113 @@ function App() {
         <div className="form-section">
           <h3>📞 Services</h3>
 
-          <div className="form-row">
-            <label>Phone Service</label>
-            <select name="PhoneService" value={formData.PhoneService} onChange={handleInputChange}>
-              <option>Yes</option>
-              <option>No</option>
-            </select>
-          </div>
+          <CustomSelect
+            name="PhoneService"
+            value={formData.PhoneService}
+            onChange={handleInputChange}
+            options={['Yes', 'No']}
+            label="Phone Service"
+          />
 
-          <div className="form-row">
-            <label>Multiple Lines</label>
-            <select name="MultipleLines" value={formData.MultipleLines} onChange={handleInputChange}>
-              <option>Yes</option>
-              <option>No</option>
-              <option>No phone service</option>
-            </select>
-          </div>
+          <CustomSelect
+            name="MultipleLines"
+            value={formData.MultipleLines}
+            onChange={handleInputChange}
+            options={['Yes', 'No', 'No phone service']}
+            label="Multiple Lines"
+          />
 
-          <div className="form-row">
-            <label>Internet Service</label>
-            <select name="InternetService" value={formData.InternetService} onChange={handleInputChange}>
-              <option>DSL</option>
-              <option>Fiber optic</option>
-              <option>No</option>
-            </select>
-          </div>
+          <CustomSelect
+            name="InternetService"
+            value={formData.InternetService}
+            onChange={handleInputChange}
+            options={['DSL', 'Fiber optic', 'No']}
+            label="Internet Service"
+          />
 
-          <div className="form-row">
-            <label>Online Security</label>
-            <select name="OnlineSecurity" value={formData.OnlineSecurity} onChange={handleInputChange}>
-              <option>Yes</option>
-              <option>No</option>
-              <option>No internet service</option>
-            </select>
-          </div>
+          <CustomSelect
+            name="OnlineSecurity"
+            value={formData.OnlineSecurity}
+            onChange={handleInputChange}
+            options={['Yes', 'No', 'No internet service']}
+            label="Online Security"
+          />
 
-          <div className="form-row">
-            <label>Online Backup</label>
-            <select name="OnlineBackup" value={formData.OnlineBackup} onChange={handleInputChange}>
-              <option>Yes</option>
-              <option>No</option>
-              <option>No internet service</option>
-            </select>
-          </div>
+          <CustomSelect
+            name="OnlineBackup"
+            value={formData.OnlineBackup}
+            onChange={handleInputChange}
+            options={['Yes', 'No', 'No internet service']}
+            label="Online Backup"
+          />
 
-          <div className="form-row">
-            <label>Device Protection</label>
-            <select name="DeviceProtection" value={formData.DeviceProtection} onChange={handleInputChange}>
-              <option>Yes</option>
-              <option>No</option>
-              <option>No internet service</option>
-            </select>
-          </div>
+          <CustomSelect
+            name="DeviceProtection"
+            value={formData.DeviceProtection}
+            onChange={handleInputChange}
+            options={['Yes', 'No', 'No internet service']}
+            label="Device Protection"
+          />
 
-          <div className="form-row">
-            <label>Tech Support</label>
-            <select name="TechSupport" value={formData.TechSupport} onChange={handleInputChange}>
-              <option>Yes</option>
-              <option>No</option>
-              <option>No internet service</option>
-            </select>
-          </div>
+          <CustomSelect
+            name="TechSupport"
+            value={formData.TechSupport}
+            onChange={handleInputChange}
+            options={['Yes', 'No', 'No internet service']}
+            label="Tech Support"
+          />
 
-          <div className="form-row">
-            <label>Streaming TV</label>
-            <select name="StreamingTV" value={formData.StreamingTV} onChange={handleInputChange}>
-              <option>Yes</option>
-              <option>No</option>
-              <option>No internet service</option>
-            </select>
-          </div>
+          <CustomSelect
+            name="StreamingTV"
+            value={formData.StreamingTV}
+            onChange={handleInputChange}
+            options={['Yes', 'No', 'No internet service']}
+            label="Streaming TV"
+            forceDirection="up"
+          />
 
-          <div className="form-row">
-            <label>Streaming Movies</label>
-            <select name="StreamingMovies" value={formData.StreamingMovies} onChange={handleInputChange}>
-              <option>Yes</option>
-              <option>No</option>
-              <option>No internet service</option>
-            </select>
-          </div>
+          <CustomSelect
+            name="StreamingMovies"
+            value={formData.StreamingMovies}
+            onChange={handleInputChange}
+            options={['Yes', 'No', 'No internet service']}
+            label="Streaming Movies"
+            forceDirection="up"
+          />
         </div>
 
         <div className="form-section">
           <h3>💳 Billing</h3>
 
-          <div className="form-row">
-            <label>Contract Type</label>
-            <select name="Contract" value={formData.Contract} onChange={handleInputChange}>
-              <option>Month-to-month</option>
-              <option>One year</option>
-              <option>Two year</option>
-            </select>
-          </div>
+          <CustomSelect
+            name="Contract"
+            value={formData.Contract}
+            onChange={handleInputChange}
+            options={['Month-to-month', 'One year', 'Two year']}
+            label="Contract Type"
+          />
 
-          <div className="form-row">
-            <label>Paperless Billing</label>
-            <select name="PaperlessBilling" value={formData.PaperlessBilling} onChange={handleInputChange}>
-              <option>Yes</option>
-              <option>No</option>
-            </select>
-          </div>
+          <CustomSelect
+            name="PaperlessBilling"
+            value={formData.PaperlessBilling}
+            onChange={handleInputChange}
+            options={['Yes', 'No']}
+            label="Paperless Billing"
+          />
 
-          <div className="form-row">
-            <label>Payment Method</label>
-            <select name="PaymentMethod" value={formData.PaymentMethod} onChange={handleInputChange}>
-              <option>Electronic check</option>
-              <option>Mailed check</option>
-              <option>Bank transfer (automatic)</option>
-              <option>Credit card (automatic)</option>
-            </select>
-          </div>
+          <CustomSelect
+            name="PaymentMethod"
+            value={formData.PaymentMethod}
+            onChange={handleInputChange}
+            options={[
+              'Electronic check',
+              'Mailed check',
+              'Bank transfer (automatic)',
+              'Credit card (automatic)'
+            ]}
+            label="Payment Method"
+            forceDirection="up"
+          />
 
           <div className="form-row">
             <label>Monthly Charges ($)</label>
@@ -527,14 +524,19 @@ function App() {
           <div className="table-header">
             <h3>👥 Customer List</h3>
             <div className="filter-controls">
-              <label>Filter by Risk:</label>
-              <select value={filterRisk} onChange={(e) => setFilterRisk(e.target.value)}>
-                <option value="all">All Customers</option>
-                <option value="Critical">Critical</option>
-                <option value="High">High</option>
-                <option value="Medium">Medium</option>
-                <option value="Low">Low</option>
-              </select>
+              <CustomSelect
+                name="filterRisk"
+                value={filterRisk}
+                onChange={(e) => setFilterRisk(e.target.value)}
+                options={[
+                  { value: 'all', label: 'All Customers' },
+                  { value: 'Critical', label: 'Critical' },
+                  { value: 'High', label: 'High' },
+                  { value: 'Medium', label: 'Medium' },
+                  { value: 'Low', label: 'Low' }
+                ]}
+                label="Filter by Risk:"
+              />
             </div>
           </div>
 
@@ -600,10 +602,18 @@ function App() {
           </h1>
           <button
             className="theme-toggle"
-            onClick={() => setDarkMode(!darkMode)}
+            onClick={(e) => {
+              setDarkMode(!darkMode);
+              e.currentTarget.blur(); // Remove focus after click
+            }}
             title={`Switch to ${darkMode ? "light" : "dark"} mode`}
+            aria-label="Toggle theme"
           >
-            {darkMode ? "☀️" : "🌙"}
+            <span className="toggle-track">
+              <span className={`toggle-thumb ${darkMode ? 'dark' : 'light'}`}>
+                {darkMode ? "🌙" : "☀️"}
+              </span>
+            </span>
           </button>
         </div>
       </header>
@@ -611,13 +621,19 @@ function App() {
       <nav className="nav-tabs">
         <button
           className={activeTab === "predict" ? "active" : ""}
-          onClick={() => setActiveTab("predict")}
+          onClick={(e) => {
+            setActiveTab("predict");
+            e.currentTarget.blur();
+          }}
         >
           🔍 Predict Churn
         </button>
         <button
           className={activeTab === "dashboard" ? "active" : ""}
-          onClick={() => setActiveTab("dashboard")}
+          onClick={(e) => {
+            setActiveTab("dashboard");
+            e.currentTarget.blur();
+          }}
         >
           📊 Dashboard
         </button>

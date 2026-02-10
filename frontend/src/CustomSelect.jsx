@@ -1,9 +1,10 @@
 import React, { useState, useRef, useEffect } from 'react';
 import './CustomSelect.css';
 
-const CustomSelect = ({ name, value, onChange, options, label }) => {
+const CustomSelect = ({ name, value, onChange, options, label, forceDirection }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedValue, setSelectedValue] = useState(value);
+  const [dropdownDirection, setDropdownDirection] = useState('down');
   const dropdownRef = useRef(null);
 
   useEffect(() => {
@@ -20,6 +21,36 @@ const CustomSelect = ({ name, value, onChange, options, label }) => {
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
+
+  // Determine dropdown direction when opening
+  useEffect(() => {
+    // If forceDirection is specified, use it
+    if (forceDirection) {
+      setDropdownDirection(forceDirection);
+      return;
+    }
+    
+    if (isOpen && dropdownRef.current) {
+      const rect = dropdownRef.current.getBoundingClientRect();
+      const viewportHeight = window.innerHeight;
+      const spaceBelow = viewportHeight - rect.bottom;
+      const spaceAbove = rect.top;
+      
+      // Calculate how many options will be shown (max 5-6 visible at once due to max-height: 200px)
+      const optionHeight = 45; // approximate height per option
+      const maxVisibleOptions = Math.min(options.length, 5);
+      const estimatedDropdownHeight = maxVisibleOptions * optionHeight + 20; // +20 for padding
+      
+      // Open upward if:
+      // 1. Not enough space below for dropdown
+      // 2. There IS enough space above
+      if (spaceBelow < estimatedDropdownHeight && spaceAbove >= estimatedDropdownHeight) {
+        setDropdownDirection('up');
+      } else {
+        setDropdownDirection('down');
+      }
+    }
+  }, [isOpen, options.length, forceDirection]);
 
   const handleSelect = (option) => {
     const event = {
@@ -59,7 +90,7 @@ const CustomSelect = ({ name, value, onChange, options, label }) => {
       </div>
       
       {isOpen && (
-        <div className="custom-select-dropdown">
+        <div className={`custom-select-dropdown ${dropdownDirection === 'up' ? 'dropdown-up' : 'dropdown-down'}`}>
           {options.map((option, index) => {
             const optionValue = typeof option === 'object' ? option.value : option;
             const optionLabel = typeof option === 'object' ? option.label : option;

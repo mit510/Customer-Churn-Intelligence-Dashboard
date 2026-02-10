@@ -18,37 +18,39 @@ body {
 }
 
 :root {
-  /* Light Mode Colors */
-  --bg-primary-light: #f9fafb;
+  /* Light Mode Colors - Professional Blue/Gray Palette */
+  --bg-primary-light: #f8fafc;
   --bg-secondary-light: #ffffff;
-  --bg-tertiary-light: #f3f4f6;
-  --text-primary-light: #111827;
-  --text-secondary-light: #6b7280;
-  --border-light: #e5e7eb;
-  --shadow-light: rgba(0, 0, 0, 0.1);
+  --bg-tertiary-light: #f1f5f9;
+  --text-primary-light: #0f172a;
+  --text-secondary-light: #64748b;
+  --border-light: #e2e8f0;
+  --shadow-light: rgba(15, 23, 42, 0.08);
   
-  /* Dark Mode Colors */
-  --bg-primary-dark: #0f172a;
-  --bg-secondary-dark: #1e293b;
-  --bg-tertiary-dark: #334155;
+  /* Dark Mode Colors - Deep Professional Slate */
+  --bg-primary-dark: #0a0f1e;
+  --bg-secondary-dark: #111827;
+  --bg-tertiary-dark: #1e293b;
   --text-primary-dark: #f1f5f9;
   --text-secondary-dark: #94a3b8;
-  --border-dark: #334155;
-  --shadow-dark: rgba(0, 0, 0, 0.3);
+  --border-dark: #1e293b;
+  --shadow-dark: rgba(0, 0, 0, 0.4);
   
-  /* Brand Colors */
-  --primary: #8b5cf6;
-  --primary-dark: #7c3aed;
-  --success: #22c55e;
-  --warning: #eab308;
+  /* Brand Colors - Professional Blue Accent */
+  --primary: #2563eb;
+  --primary-dark: #1e40af;
+  --primary-light: #3b82f6;
+  --primary-subtle: #dbeafe;
+  --success: #10b981;
+  --warning: #f59e0b;
   --danger: #ef4444;
-  --info: #3b82f6;
+  --info: #06b6d4;
   
   /* Risk Level Colors */
   --risk-critical: #dc2626;
   --risk-high: #f97316;
-  --risk-medium: #eab308;
-  --risk-low: #22c55e;
+  --risk-medium: #f59e0b;
+  --risk-low: #10b981;
 }
 
 /* ==================== THEME CLASSES ==================== */
@@ -94,9 +96,9 @@ body {
 }
 
 .header {
-  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+  background: linear-gradient(135deg, #1e40af 0%, #2563eb 50%, #3b82f6 100%);
   padding: 1.5rem 2rem;
-  box-shadow: 0 4px 6px var(--shadow);
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.15);
   width: 100%;
   flex-shrink: 0;
 }
@@ -130,29 +132,73 @@ body {
 }
 
 .theme-toggle {
-  background: rgba(255, 255, 255, 0.2);
-  border: 2px solid rgba(255, 255, 255, 0.3);
-  color: white;
-  padding: 0.5rem 1rem;
-  border-radius: 8px;
+  background: transparent;
+  border: none;
+  padding: 0;
   cursor: pointer;
-  font-size: 1.25rem;
+  transition: all 0.3s ease;
+  outline: none;
+}
+
+.theme-toggle:focus {
+  outline: none;
+}
+
+.theme-toggle:focus-visible .toggle-track {
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.5);
+}
+
+.toggle-track {
+  display: flex;
+  align-items: center;
+  width: 60px;
+  height: 30px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 15px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  position: relative;
   transition: all 0.3s ease;
 }
 
-.theme-toggle:hover {
+.theme-toggle:hover .toggle-track {
   background: rgba(255, 255, 255, 0.3);
-  transform: scale(1.05);
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+.toggle-thumb {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  background: white;
+  border-radius: 50%;
+  position: absolute;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  font-size: 14px;
+}
+
+.toggle-thumb.light {
+  left: 2px;
+}
+
+.toggle-thumb.dark {
+  left: 30px;
+}
+
+.theme-toggle:active .toggle-thumb {
+  width: 30px;
 }
 
 /* ==================== NAVIGATION TABS ==================== */
 .nav-tabs {
   background: var(--bg-secondary);
-  border-bottom: 2px solid var(--border);
-  padding: 0;
+  border-bottom: 1px solid var(--border);
+  padding: 0.5rem;
   display: flex;
   justify-content: center;
-  gap: 0;
+  gap: 0.5rem;
   width: 100%;
   flex-shrink: 0;
   overflow-x: auto;
@@ -162,13 +208,22 @@ body {
   background: transparent;
   border: none;
   color: var(--text-secondary);
-  padding: 1rem 2rem;
+  padding: 0.75rem 1.5rem;
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
-  border-bottom: 3px solid transparent;
+  border-radius: 8px;
   white-space: nowrap;
+  outline: none;
+}
+
+.nav-tabs button:focus {
+  outline: none;
+}
+
+.nav-tabs button:focus-visible {
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.3);
 }
 
 .nav-tabs button:hover {
@@ -177,8 +232,9 @@ body {
 }
 
 .nav-tabs button.active {
-  color: var(--primary);
-  border-bottom-color: var(--primary);
+  color: white;
+  background: var(--primary);
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.25);
 }
 
 /* ==================== MAIN CONTENT ==================== */
@@ -263,12 +319,12 @@ body {
 .form-section {
   background: var(--bg-secondary);
   padding: 1.5rem;
-  border-radius: 16px;
-  box-shadow: 0 4px 12px var(--shadow);
+  border-radius: 12px;
+  box-shadow: 0 2px 8px var(--shadow), 0 1px 3px rgba(0, 0, 0, 0.05);
   border: 1px solid var(--border);
-  transition: all 0.3s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
-  overflow: hidden;
+  overflow: visible;
 }
 
 .form-section::before {
@@ -278,15 +334,16 @@ body {
   left: 0;
   right: 0;
   height: 3px;
-  background: linear-gradient(90deg, var(--primary) 0%, var(--primary-dark) 100%);
+  background: linear-gradient(90deg, var(--primary) 0%, var(--primary-light) 100%);
   opacity: 0;
   transition: opacity 0.3s ease;
+  border-radius: 12px 12px 0 0;
 }
 
 .form-section:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 20px var(--shadow);
-  border-color: var(--primary);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px var(--shadow), 0 2px 6px rgba(0, 0, 0, 0.08);
+  border-color: var(--border);
 }
 
 .form-section:hover::before {
@@ -395,7 +452,7 @@ body {
 .form-row select:focus {
   outline: none;
   border-color: var(--primary);
-  box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.15);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12), 0 1px 3px rgba(37, 99, 235, 0.1);
   background-color: var(--bg-secondary);
 }
 
@@ -412,7 +469,7 @@ body {
     5px 5px;
   background-repeat: no-repeat;
   background-color: var(--bg-secondary);
-  box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.15), 0 4px 12px rgba(139, 92, 246, 0.1);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12), 0 1px 3px rgba(37, 99, 235, 0.1);
   transform: translateY(-1px);
 }
 
@@ -503,15 +560,15 @@ body {
   border-radius: 12px;
   cursor: pointer;
   display: block;
-  margin: 2rem auto;
-  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
-  transition: all 0.3s ease;
+  margin: 2rem auto 4rem auto;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25), 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   min-width: 250px;
 }
 
 .analyze-btn:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(139, 92, 246, 0.4);
+  box-shadow: 0 8px 20px rgba(37, 99, 235, 0.35), 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
 .analyze-btn:disabled {
@@ -669,19 +726,13 @@ body {
   display: flex;
   align-items: center;
   gap: 1rem;
-  box-shadow: 0 2px 8px var(--shadow);
+  box-shadow: 0 2px 8px var(--shadow), 0 1px 3px rgba(0, 0, 0, 0.05);
   border: 1px solid var(--border);
-  transition: all 0.3s ease;
-}
-
-.stat-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 6px 16px var(--shadow);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .stat-card.critical {
-  background: linear-gradient(135deg, var(--bg-secondary) 0%, rgba(220, 38, 38, 0.1) 100%);
-  border-left: 4px solid var(--risk-critical);
+  /* Consistent styling with other stat cards */
 }
 
 .stat-icon {
@@ -720,7 +771,7 @@ body {
   background: var(--bg-secondary);
   padding: 1.5rem;
   border-radius: 12px;
-  box-shadow: 0 2px 8px var(--shadow);
+  box-shadow: 0 2px 8px var(--shadow), 0 1px 3px rgba(0, 0, 0, 0.05);
   border: 1px solid var(--border);
   min-height: 400px;
 }
@@ -758,31 +809,15 @@ body {
 
 .filter-controls {
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   gap: 0.75rem;
   flex-wrap: wrap;
+  min-width: 250px;
 }
 
-.filter-controls label {
-  color: var(--text-secondary);
-  font-weight: 600;
-  font-size: 0.875rem;
-}
-
-.filter-controls select {
-  padding: 0.5rem 1rem;
-  border: 2px solid var(--border);
-  border-radius: 8px;
-  background: var(--bg-primary);
-  color: var(--text-primary);
-  font-size: 0.875rem;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.filter-controls select:focus {
-  outline: none;
-  border-color: var(--primary);
+.filter-controls .custom-select-wrapper {
+  margin-bottom: 0;
+  min-width: 200px;
 }
 
 .table-container {
@@ -1021,11 +1056,6 @@ body {
 
   .logo-icon {
     font-size: 1.5rem;
-  }
-
-  .theme-toggle {
-    padding: 0.4rem 0.8rem;
-    font-size: 1rem;
   }
 
   .nav-tabs {
