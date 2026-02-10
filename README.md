@@ -217,8 +217,11 @@ Your Name
 ## 📞 Support
 
 If you have any questions or need help, please open an issue or contact me directly.
+<img width="1919" height="930" alt="Screenshot 2026-02-09 210008" src="https://github.com/user-attachments/assets/54280e57-42a4-4dff-a72b-b2305fc64eb8" />
 
----<img width="1919" height="852" alt="Screenshot 2026-02-09 210031" src="https://github.com/user-attachments/assets/1c46601e-2d8c-4205-93d5-53db2ccd28cd" />
+<img width="1919" height="928" alt="Screenshot 2026-02-09 210020" src="https://github.com/user-attachments/assets/30e139c3-8ee5-42fd-ad0d-ab7fead3b582" />
+
+<img width="1919" height="852" alt="Screenshot 2026-02-09 210031" src="https://github.com/user-attachments/assets/1c46601e-2d8c-4205-93d5-53db2ccd28cd" />
 
 ## Images 
 
