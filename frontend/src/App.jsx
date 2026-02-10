@@ -5,6 +5,7 @@ import {
   LineChart, Line, PieChart, Pie, Legend, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar
 } from "recharts";
 import "./App.css";
+import CustomSelect from './CustomSelect';
 
 const API_URL = "http://127.0.0.1:8000";
 
@@ -60,7 +61,7 @@ function App() {
         axios.get(`${API_URL}/analytics/dashboard`),
         axios.get(`${API_URL}/analytics/trends`)
       ]);
-      
+
       setCustomers(customersRes.data.customers || []);
       setAnalytics(analyticsRes.data);
       setTrends(trendsRes.data.trends || []);
@@ -72,13 +73,13 @@ function App() {
   const handlePredict = async () => {
     try {
       setLoading(true);
-      
+
       const predictRes = await axios.post(`${API_URL}/predict`, formData);
       setPrediction(predictRes.data);
-      
+
       const explainRes = await axios.post(`${API_URL}/explain`, formData);
       setExplanation(explainRes.data.top_factors);
-      
+
       // Refresh dashboard if on that tab
       if (activeTab === "dashboard") {
         fetchDashboardData();
@@ -93,13 +94,25 @@ function App() {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: name === "SeniorCitizen" ? parseInt(value) : 
-              name === "tenure" ? parseInt(value) :
-              name === "MonthlyCharges" || name === "TotalCharges" ? parseFloat(value) :
+
+    setFormData(prev => {
+      const updatedData = {
+        ...prev,
+        [name]: name === "SeniorCitizen" ? parseInt(value) :
+          name === "tenure" ? parseInt(value) :
+            name === "MonthlyCharges" || name === "TotalCharges" ? parseFloat(value) :
               value
-    }));
+      };
+
+      // Auto-calculate TotalCharges when tenure or MonthlyCharges changes
+      if (name === "tenure" || name === "MonthlyCharges") {
+        const tenure = name === "tenure" ? parseInt(value) : prev.tenure;
+        const monthlyCharges = name === "MonthlyCharges" ? parseFloat(value) : prev.MonthlyCharges;
+        updatedData.TotalCharges = parseFloat((tenure * monthlyCharges).toFixed(2));
+      }
+
+      return updatedData;
+    });
   };
 
   const viewCustomerDetails = async (customerId) => {
@@ -121,8 +134,8 @@ function App() {
     return colors[risk] || "#6b7280";
   };
 
-  const filteredCustomers = filterRisk === "all" 
-    ? customers 
+  const filteredCustomers = filterRisk === "all"
+    ? customers
     : customers.filter(c => c.last_prediction?.risk_level === filterRisk);
 
   // ==================== RENDER FUNCTIONS ====================
@@ -132,7 +145,7 @@ function App() {
       <div className="form-grid">
         <div className="form-section">
           <h3>📋 Customer Information</h3>
-          
+
           <div className="form-row">
             <label>Customer ID (optional)</label>
             <input
@@ -144,37 +157,40 @@ function App() {
             />
           </div>
 
-          <div className="form-row">
-            <label>Gender</label>
-            <select name="gender" value={formData.gender} onChange={handleInputChange}>
-              <option>Male</option>
-              <option>Female</option>
-            </select>
-          </div>
+          <CustomSelect
+            name="gender"
+            value={formData.gender}
+            onChange={handleInputChange}
+            options={['Male', 'Female']}
+            label="Gender"
+          />
 
-          <div className="form-row">
-            <label>Senior Citizen</label>
-            <select name="SeniorCitizen" value={formData.SeniorCitizen} onChange={handleInputChange}>
-              <option value={0}>No</option>
-              <option value={1}>Yes</option>
-            </select>
-          </div>
+          <CustomSelect
+            name="SeniorCitizen"
+            value={formData.SeniorCitizen}
+            onChange={handleInputChange}
+            options={[
+              { value: 0, label: 'No' },
+              { value: 1, label: 'Yes' }
+            ]}
+            label="Senior Citizen"
+          />
 
-          <div className="form-row">
-            <label>Partner</label>
-            <select name="Partner" value={formData.Partner} onChange={handleInputChange}>
-              <option>Yes</option>
-              <option>No</option>
-            </select>
-          </div>
+          <CustomSelect
+            name="Partner"
+            value={formData.Partner}
+            onChange={handleInputChange}
+            options={['Yes', 'No']}
+            label="Partner"
+          />
 
-          <div className="form-row">
-            <label>Dependents</label>
-            <select name="Dependents" value={formData.Dependents} onChange={handleInputChange}>
-              <option>Yes</option>
-              <option>No</option>
-            </select>
-          </div>
+          <CustomSelect
+            name="Dependents"
+            value={formData.Dependents}
+            onChange={handleInputChange}
+            options={['Yes', 'No']}
+            label="Dependents"
+          />
 
           <div className="form-row">
             <label>Tenure (months)</label>
@@ -190,7 +206,7 @@ function App() {
 
         <div className="form-section">
           <h3>📞 Services</h3>
-          
+
           <div className="form-row">
             <label>Phone Service</label>
             <select name="PhoneService" value={formData.PhoneService} onChange={handleInputChange}>
@@ -274,7 +290,7 @@ function App() {
 
         <div className="form-section">
           <h3>💳 Billing</h3>
-          
+
           <div className="form-row">
             <label>Contract Type</label>
             <select name="Contract" value={formData.Contract} onChange={handleInputChange}>
@@ -315,14 +331,21 @@ function App() {
           </div>
 
           <div className="form-row">
-            <label>Total Charges ($)</label>
+            <label>Total Charges ($) - Auto-calculated</label>
             <input
               type="number"
               name="TotalCharges"
               value={formData.TotalCharges}
-              onChange={handleInputChange}
+              readOnly
               step="0.01"
               min="0"
+              style={{
+                backgroundColor: 'var(--bg-tertiary)',
+                cursor: 'not-allowed',
+                fontWeight: '600',
+                color: 'var(--primary)'
+              }}
+              title="Automatically calculated as: Tenure × Monthly Charges"
             />
           </div>
         </div>
@@ -347,7 +370,7 @@ function App() {
                 {(prediction.churn_probability * 100).toFixed(1)}%
               </div>
             </div>
-            
+
             <div className="customer-info">
               <p><strong>Customer ID:</strong> {prediction.customer_id}</p>
               <p><strong>Predicted:</strong> {new Date(prediction.predicted_at).toLocaleString()}</p>
@@ -368,16 +391,16 @@ function App() {
             <ResponsiveContainer width="100%" height={400}>
               <BarChart data={explanation}>
                 <CartesianGrid strokeDasharray="3 3" stroke={darkMode ? "#374151" : "#e5e7eb"} />
-                <XAxis 
-                  dataKey="feature" 
-                  angle={-45} 
-                  textAnchor="end" 
-                  interval={0} 
+                <XAxis
+                  dataKey="feature"
+                  angle={-45}
+                  textAnchor="end"
+                  interval={0}
                   height={120}
                   tick={{ fill: darkMode ? "#9ca3af" : "#4b5563", fontSize: 11 }}
                 />
                 <YAxis tick={{ fill: darkMode ? "#9ca3af" : "#4b5563" }} />
-                <Tooltip 
+                <Tooltip
                   contentStyle={{
                     backgroundColor: darkMode ? "#1f2937" : "#ffffff",
                     border: `1px solid ${darkMode ? "#374151" : "#e5e7eb"}`,
@@ -475,22 +498,22 @@ function App() {
               <ResponsiveContainer width="100%" height={300}>
                 <LineChart data={trends}>
                   <CartesianGrid strokeDasharray="3 3" stroke={darkMode ? "#374151" : "#e5e7eb"} />
-                  <XAxis 
-                    dataKey="date" 
+                  <XAxis
+                    dataKey="date"
                     tick={{ fill: darkMode ? "#9ca3af" : "#4b5563", fontSize: 11 }}
                   />
                   <YAxis tick={{ fill: darkMode ? "#9ca3af" : "#4b5563" }} />
-                  <Tooltip 
+                  <Tooltip
                     contentStyle={{
                       backgroundColor: darkMode ? "#1f2937" : "#ffffff",
                       border: `1px solid ${darkMode ? "#374151" : "#e5e7eb"}`,
                       borderRadius: "8px"
                     }}
                   />
-                  <Line 
-                    type="monotone" 
-                    dataKey="avg_churn_probability" 
-                    stroke="#8b5cf6" 
+                  <Line
+                    type="monotone"
+                    dataKey="avg_churn_probability"
+                    stroke="#8b5cf6"
                     strokeWidth={3}
                     dot={{ fill: "#8b5cf6", r: 4 }}
                   />
@@ -536,21 +559,21 @@ function App() {
                     <td>{customer.Contract}</td>
                     <td>${customer.MonthlyCharges?.toFixed(2)}</td>
                     <td>
-                      <span 
-                        className="risk-badge" 
+                      <span
+                        className="risk-badge"
                         style={{ backgroundColor: getRiskColor(customer.last_prediction?.risk_level) }}
                       >
                         {customer.last_prediction?.risk_level || "Unknown"}
                       </span>
                     </td>
                     <td>
-                      {customer.last_prediction 
+                      {customer.last_prediction
                         ? `${(customer.last_prediction.churn_probability * 100).toFixed(1)}%`
                         : "N/A"
                       }
                     </td>
                     <td>
-                      <button 
+                      <button
                         className="view-btn"
                         onClick={() => viewCustomerDetails(customer.customer_id)}
                       >
@@ -575,7 +598,7 @@ function App() {
             <span className="logo-icon">🎯</span>
             Customer Churn Intelligence Platform
           </h1>
-          <button 
+          <button
             className="theme-toggle"
             onClick={() => setDarkMode(!darkMode)}
             title={`Switch to ${darkMode ? "light" : "dark"} mode`}
@@ -586,13 +609,13 @@ function App() {
       </header>
 
       <nav className="nav-tabs">
-        <button 
+        <button
           className={activeTab === "predict" ? "active" : ""}
           onClick={() => setActiveTab("predict")}
         >
           🔍 Predict Churn
         </button>
-        <button 
+        <button
           className={activeTab === "dashboard" ? "active" : ""}
           onClick={() => setActiveTab("dashboard")}
         >
@@ -609,21 +632,21 @@ function App() {
         <div className="modal-overlay" onClick={() => setSelectedCustomer(null)}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
             <button className="modal-close" onClick={() => setSelectedCustomer(null)}>×</button>
-            
+
             <h2>Customer Profile: {selectedCustomer.customer_id}</h2>
-            
+
             <div className="modal-sections">
               <div className="modal-section">
                 <h3>📊 Risk Assessment</h3>
                 <div className="risk-display">
-                  <span 
+                  <span
                     className="risk-badge large"
                     style={{ backgroundColor: getRiskColor(selectedCustomer.last_prediction?.risk_level) }}
                   >
                     {selectedCustomer.last_prediction?.risk_level || "Unknown"}
                   </span>
                   <div className="probability-display">
-                    {selectedCustomer.last_prediction 
+                    {selectedCustomer.last_prediction
                       ? `${(selectedCustomer.last_prediction.churn_probability * 100).toFixed(1)}%`
                       : "N/A"
                     }
